@@ -5,8 +5,8 @@ from PIL import Image, ImageTk
 import numpy as np
 import csv
 
-path1 = "/Users/riikkaeskola/Documents/pictures/" 
-listing = os.listdir(path1) 
+path1 = "/Users/riikkaeskola/Documents/pictures/"
+listing = os.listdir(path1)
 apustus = len(listing)
 
 lista_elukoista = ["kirahvi", "jellona", "ronsu", "seepra", "virtahepo"]
@@ -15,7 +15,7 @@ apustus2 = len(lista_elukoista)
 
 class App:
     def __init__(self, master=tk.Tk()):
-        self.ind = 0   
+        self.ind = 0
         self.elukat = np.empty((apustus,apustus2),dtype=int)
         self.kuvanimi = np.empty(apustus,dtype=object)
         #self.tatat = np.array([elukat,kuvanimi])
@@ -36,7 +36,7 @@ class App:
         self.var3 = tk.IntVar()
         self.var4 = tk.IntVar()
         self.var5 = tk.IntVar()
-        
+
         self.eka = tk.Checkbutton(self.frame, text="kiraffi", variable = self.var1, onvalue=1, offvalue=0)#variable=self.elukkata[0])
         self.eka.pack(fill=tk.Y)
         self.eka.config(font=("Arial", 30))
@@ -61,11 +61,13 @@ class App:
                                      command=self.update)
         self.button_left.pack(fill=tk.X)
         self.button_left.config(font=("Arial", 40))
-        
+
         self.is_active = True
+
 
     def load_image(self, filename):
         self.fig_image = ImageTk.PhotoImage(Image.open(filename).resize(self.pic_size, Image.BILINEAR))
+
 
     def update(self, *args):
         #self.elukat[self.ind,0] = self.elukkata[0]
@@ -75,33 +77,35 @@ class App:
         self.elukat[self.ind,2] = self.var3.get()
         self.elukat[self.ind,3] = self.var4.get()
         self.elukat[self.ind,4] = self.var5.get()
-        
-        self.kuvanimi[self.ind] = listing[self.ind] 
+
+        self.kuvanimi[self.ind] = listing[self.ind]
         if self.ind < apustus-1:
             self.ind = self.ind + 1
             self.load_image(path1 + listing[self.ind])
             self.image_label.config(image=self.fig_image)
-        
+
         self.eka.deselect()
         self.toka.deselect()
         self.kolmas.deselect()
         self.neljas.deselect()
         self.viides.deselect()
-        
+
 
     def close(self, *args):
         print('GUI closed...')
         self.master.quit()
         self.is_active = False
 
+
     def is_closed(self):
         return not self.is_active
+
 
     def mainloop(self):
         self.master.mainloop()
         print(self.elukat)
         print(self.kuvanimi)
-        
+
         tatat = np.column_stack((self.kuvanimi,self.elukat))
         f = open('numbers2.csv', 'w')
         with f:
@@ -110,9 +114,8 @@ class App:
                 writer.writerow(row)
         print('mainloop closed...')
 
+
 if __name__ == '__main__':
     import time
     app = App()
     app.mainloop()
-
-
